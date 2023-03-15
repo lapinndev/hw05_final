@@ -39,11 +39,6 @@ class PostModelTest(TestCase):
         """Проверка добавления новых комментариев."""
         comments_count = Comment.objects.count()
         self.user = User.objects.create_user(username='test_comment')
-        self.group = Group.objects.create(
-            title='Тестовая группа1',
-            slug='Тестовый слаг1',
-            description='Неосмысленная жизнь не стоит того, чтобы жить.',
-        )
         self.post = Post.objects.create(
             author=self.user,
             text='Тестовый пост',
