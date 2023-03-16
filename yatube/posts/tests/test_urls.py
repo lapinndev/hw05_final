@@ -3,7 +3,7 @@ from django.test import TestCase, Client
 from django.core.cache import cache
 from django.contrib.auth import get_user_model
 from http import HTTPStatus
-from posts.models import Group, Post, Comment
+from posts.models import Group, Post
 
 User = get_user_model()
 
@@ -70,14 +70,15 @@ class StaticURLTests(TestCase):
     def test_auth_page_redirect(self):
         """Страницы доступны только авторизированному пользователю."""
         auth_pages = [
-            
+
             f'/profile/{self.user.username}/follow',
             f'/profile/{self.user.username}/unfollow'
         ]
 
         for pages in auth_pages:
             response = self.authorized_client.get(pages)
-            self.assertEqual(response.status_code, HTTPStatus.MOVED_PERMANENTLY)
+            self.assertEqual(response.status_code,
+                             HTTPStatus.MOVED_PERMANENTLY)
 
     def test_comment_page(self):
         """Проверка страницы comment."""
