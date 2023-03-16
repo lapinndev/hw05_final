@@ -3,7 +3,7 @@ from django.test import TestCase, Client
 from django.core.cache import cache
 from django.contrib.auth import get_user_model
 from http import HTTPStatus
-from posts.models import Group, Post
+from posts.models import Group, Post, Comment
 
 User = get_user_model()
 
@@ -57,9 +57,33 @@ class StaticURLTests(TestCase):
             self.assertEqual(response.status_code, HTTPStatus.OK)
 
     def test_auth_page(self):
-        """Страница /create/ доступна только авторизированному пользователю."""
-        response = self.authorized_client.get('/create/')
-        self.assertEqual(response.status_code, HTTPStatus.OK)
+        """Страницы доступны только авторизированному пользователю."""
+        auth_pages = [
+            '/create/',
+            '/follow/',
+        ]
+
+        for pages in auth_pages:
+            response = self.authorized_client.get(pages)
+            self.assertEqual(response.status_code, HTTPStatus.OK)
+
+    def test_auth_page_redirect(self):
+        """Страницы доступны только авторизированному пользователю."""
+        auth_pages = [
+            
+            f'/profile/{self.user.username}/follow',
+            f'/profile/{self.user.username}/unfollow'
+        ]
+
+        for pages in auth_pages:
+            response = self.authorized_client.get(pages)
+            self.assertEqual(response.status_code, HTTPStatus.MOVED_PERMANENTLY)
+
+    def test_comment_page(self):
+        """Проверка страницы comment."""
+        page = f'/posts/{self.post.id}/comment/'
+        response = self.authorized_client.get(page)
+        self.assertEqual(response.status_code, HTTPStatus.FOUND)
 
     def test_edit_page(self):
         """Страница /edit/ доступна только автору поста."""

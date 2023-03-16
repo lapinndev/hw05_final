@@ -23,6 +23,12 @@ class PostModelTest(TestCase):
             text='Тестовый пост',
         )
 
+        cls.comment = Comment.objects.create(
+            post=cls.post,
+            author=cls.user,
+            text='Тестовый комментарий для проверки.'
+        )
+
     def test_models_post_have_correct_object_names(self):
         """Проверяем, что у модели post корректно работает __str__."""
         post = PostModelTest.post
@@ -35,17 +41,8 @@ class PostModelTest(TestCase):
 
         self.assertEqual(str(group), group.title)
 
-    def test_create_comment(self):
-        """Проверка добавления новых комментариев."""
-        comments_count = Comment.objects.count()
-        self.user = User.objects.create_user(username='test_comment')
-        self.post = Post.objects.create(
-            author=self.user,
-            text='Тестовый пост',
-        )
-        self.comment = Comment.objects.create(
-            post=self.post,
-            author=self.user,
-            text='Тестовый комментарий для проверки.'
-        )
-        self.assertEqual(Comment.objects.count(), comments_count + 1)
+    def test_models_comment_have_correct_object_names(self):
+        """Проверяем, что у модели comment корректно работает __str__."""
+        comment = PostModelTest.comment
+
+        self.assertEqual(str(comment), comment.text)

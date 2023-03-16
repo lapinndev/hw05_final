@@ -22,9 +22,3 @@ class CommentForm(forms.ModelForm):
         widgets = {
             'text': forms.Textarea(attrs={'class': 'form-control'})
         }
-
-
-class FollowForm(forms.ModelForm):
-    class Meta:
-        model = Follow
-        fields = ('user', 'author')
